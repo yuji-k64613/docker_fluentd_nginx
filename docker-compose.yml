@@ -1,0 +1,30 @@
+version: '2'
+services:
+  nginx1:
+    build: nginx
+    ports:
+      - 90:80
+    depends_on:
+      - fluentd
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: localhost:24224
+        tag: docker.{{.Name}}
+  nginx2:
+    build: nginx
+    ports:
+      - 91:80
+    depends_on:
+      - fluentd
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: localhost:24224
+        tag: docker.{{.Name}}
+  fluentd:
+    build: fluentd
+    volumes:
+      - ./log:/home/fluent/log
+    ports:
+      - '24224:24224'
